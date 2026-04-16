@@ -1,0 +1,374 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: AI Social SaaS API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: generate
+    description: AI content generation
+  - name: video
+    description: AI video generation
+  - name: scheduler
+    description: Post scheduling
+  - name: stripe
+    description: Stripe payments
+  - name: admin
+    description: Admin dashboard
+  - name: social
+    description: Social media integrations
+  - name: youtube
+    description: YouTube OAuth and upload
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /auth/signup:
+    post:
+      operationId: signup
+      tags: [auth]
+      summary: Sign up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthCredentials"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthCredentials"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /generate:
+    post:
+      operationId: generateContent
+      tags: [generate]
+      summary: Generate AI content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateRequest"
+      responses:
+        "200":
+          description: Generated content
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/generate:
+    post:
+      operationId: generateVideo
+      tags: [video]
+      summary: Generate a video
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VideoRequest"
+      responses:
+        "200":
+          description: Video generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoResponse"
+        "403":
+          description: Limit reached
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /scheduler/schedule:
+    post:
+      operationId: schedulePost
+      tags: [scheduler]
+      summary: Schedule a post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleRequest"
+      responses:
+        "200":
+          description: Scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+  /scheduler/all:
+    get:
+      operationId: getScheduledPosts
+      tags: [scheduler]
+      summary: Get all scheduled posts
+      responses:
+        "200":
+          description: List of scheduled posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScheduledPost"
+  /stripe/create-checkout:
+    post:
+      operationId: createCheckout
+      tags: [stripe]
+      summary: Create Stripe checkout session
+      responses:
+        "200":
+          description: Checkout URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutResponse"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Get admin stats
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+  /social/connect:
+    post:
+      operationId: socialConnect
+      tags: [social]
+      summary: Connect social account
+      responses:
+        "200":
+          description: Connected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+  /social/post:
+    post:
+      operationId: socialPost
+      tags: [social]
+      summary: Post to social media
+      responses:
+        "200":
+          description: Posted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+  /youtube/auth:
+    get:
+      operationId: youtubeAuth
+      tags: [youtube]
+      summary: Start YouTube OAuth flow
+      responses:
+        "302":
+          description: Redirect to Google
+  /youtube/callback:
+    get:
+      operationId: youtubeCallback
+      tags: [youtube]
+      summary: YouTube OAuth callback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tokens
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YoutubeTokenResponse"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /youtube/upload:
+    post:
+      operationId: youtubeUpload
+      tags: [youtube]
+      summary: Upload video to YouTube
+      responses:
+        "200":
+          description: Upload result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+    AuthCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+    GenerateRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [blog, social, product]
+        prompt:
+          type: string
+      required: [type, prompt]
+    VideoRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        length:
+          type: number
+      required: [userId, length]
+    VideoResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        videoUrl:
+          type: string
+      required: [message, videoUrl]
+    ScheduleRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        platform:
+          type: string
+        time:
+          type: string
+        content:
+          type: string
+      required: [userId, platform, time, content]
+    ScheduledPost:
+      type: object
+      properties:
+        userId:
+          type: string
+        platform:
+          type: string
+        time:
+          type: string
+        content:
+          type: string
+      required: [userId, platform, time, content]
+    CheckoutResponse:
+      type: object
+      properties:
+        url:
+          type: string
+      required: [url]
+    AdminStats:
+      type: object
+      properties:
+        users:
+          type: number
+        premium:
+          type: number
+        revenue:
+          type: number
+        videos:
+          type: number
+      required: [users, premium, revenue, videos]
+    YoutubeTokenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+          nullable: true
+        expires_in:
+          type: number
+      required: [message, access_token, expires_in]
+    GenericResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
