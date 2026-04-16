@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>AI Creator 🚀</h1>
+        <p>Your viral content machine</p>
+      </div>
+
+      <div class="row">
+        <button onclick="upgrade()">Go Premium 💎</button>
+        <button class="secondary" onclick="goAdmin()">Admin</button>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-box">
+        <div class="badge">⚡ AI content + video + scheduling</div>
+        <h2 class="hero-title gradient-text">Build content at startup speed.</h2>
+        <p class="hero-sub">
+          Generate blog posts, product descriptions, social captions, AI videos, and schedule them for YouTube and TikTok from one dashboard.
+        </p>
+      </div>
+    </section>
+
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="label">Plan</div>
+        <div class="value">Free</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">60s Videos Left</div>
+        <div class="value">10</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Scheduled Posts</div>
+        <div class="value">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Connected Channels</div>
+        <div class="value">0</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>AI Text Generator</h2>
+        <div class="card-sub">Blogs, social posts, and product descriptions.</div>
+
+        <select id="type">
+          <option value="blog">Blog</option>
+          <option value="social">Social</option>
+          <option value="product">Product</option>
+        </select>
+
+        <textarea id="prompt" placeholder="Enter your prompt..."></textarea>
+        <button onclick="generateText()">Generate Text</button>
+
+        <div id="output" class="output-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>AI Video Generator 🎬</h2>
+        <div class="card-sub">Create short-form videos fast.</div>
+
+        <select id="length">
+          <option value="15">15 sec</option>
+          <option value="30">30 sec</option>
+          <option value="60">60 sec</option>
+        </select>
+
+        <button onclick="generateVideo()">Generate Video</button>
+        <div id="videoOutput" class="output-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>Scheduler ⏱</h2>
+        <div class="card-sub">Queue posts for later.</div>
+
+        <select id="platform">
+          <option value="tiktok">TikTok</option>
+          <option value="youtube">YouTube</option>
+        </select>
+
+        <input id="time" type="datetime-local" />
+        <textarea id="content" placeholder="Write scheduled content"></textarea>
+
+        <button onclick="schedulePost()">Schedule Post</button>
+      </div>
+
+      <div class="card">
+        <h2>YouTube Connect</h2>
+        <div class="card-sub">Connect your YouTube account for uploads.</div>
+
+        <button onclick="connectYouTube()">Connect YouTube</button>
+        <div class="output-box">OAuth connection will open in a new flow.</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
