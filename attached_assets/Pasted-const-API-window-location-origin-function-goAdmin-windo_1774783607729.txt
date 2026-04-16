@@ -1,0 +1,92 @@
+const API = window.location.origin;
+
+function goAdmin() {
+  window.location = "/admin.html";
+}
+
+async function signup() {
+  await fetch(API + "/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  alert("Signed up");
+}
+
+async function login() {
+  const res = await fetch(API + "/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  const data = await res.json();
+  localStorage.setItem("user", JSON.stringify(data));
+  window.location = "/dashboard.html";
+}
+
+async function generateText() {
+  const res = await fetch(API + "/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: document.getElementById("type").value,
+      prompt: document.getElementById("prompt").value
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").innerText =
+    typeof data === "string" ? data : JSON.stringify(data);
+}
+
+async function generateVideo() {
+  const res = await fetch(API + "/video/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: "demo-user",
+      length: Number(document.getElementById("length").value)
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("videoOutput").innerHTML = data.videoUrl
+    ? `<a href="${data.videoUrl}" target="_blank" rel="noreferrer">Open video</a>`
+    : JSON.stringify(data);
+}
+
+async function schedulePost() {
+  await fetch(API + "/scheduler/schedule", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: "demo-user",
+      platform: document.getElementById("platform").value,
+      time: document.getElementById("time").value,
+      content: document.getElementById("content").value
+    })
+  });
+
+  alert("Scheduled");
+}
+
+async function upgrade() {
+  const res = await fetch(API + "/stripe/create-checkout", {
+    method: "POST"
+  });
+
+  const data = await res.json();
+  if (data.url) window.location = data.url;
+}
+
+function connectYouTube() {
+  window.location = API + "/youtube/auth";
+}
