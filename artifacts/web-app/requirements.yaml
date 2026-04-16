@@ -1,0 +1,19 @@
+packages:
+  "framer-motion": "For premium page transitions and interactive micro-animations"
+  "recharts": "For the admin dashboard statistics and data visualization"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to safely merge Tailwind classes without style conflicts"
+  "date-fns": "For formatting scheduled post times"
+  "lucide-react": "Beautiful consistent iconography across the dashboard"
+
+images:
+  - path: "artifacts/web-app/public/images/hero-bg.png"
+    description: "Dark, abstract, premium SaaS background with glowing deep violet and indigo neon accents, geometric mesh, and subtle depth"
+    aspect_ratio: "16:9"
+  - path: "artifacts/web-app/public/images/auth-bg.png"
+    description: "Abstract dark luxury aesthetic with soft light leaks in purple and blue, perfect for a login screen background"
+    aspect_ratio: "16:9"
+
+notes:
+  - "Assuming customFetch handles the Authorization header by reading from localStorage 'token'"
+  - "The API routes are mounted at /api/..., using the generated hooks from @workspace/api-client-react"
